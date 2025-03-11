@@ -6,6 +6,7 @@
 #define ledC5 6
 #define ledC6 7
 int a1, a2, reading;
+bool 
 //setting hours, minutes, secound  and miliseconds to 0
 int h=0;     
 int m=0;     
@@ -47,8 +48,8 @@ void stopwatch()
 
   if(m==60)      //if state for counting up hours
   {  
-  m=00; 
-  h=h+01;
+  m=0; 
+  h=h+1;
   hms=hms+3600000;  
   } 
   tms=ms+sms+mms+hms;
@@ -76,8 +77,8 @@ void stopwatch2()
 
   if(m2==60)      //if state for counting up hours
   {  
-  m2=00; 
-  h2=h2+01;
+  m2=0; 
+  h2=h2+1;
   hms2=hms2+3600000;  
   } 
   tms2=ms2+sms2+mms2+hms2;
@@ -102,14 +103,29 @@ void readSensor()
   {
     a1 = analogRead(A0);
     a2 = analogRead(A1);
-    if (a1 < 400) a1 = 1; else a1 = 0;
-    if (a2 < 400) a2 = 1; else a2 = 0;
+    if (a1 < 400) {a1 = 1;} else {a1 = 0;}
+    if (a2 < 400) {a2 = 1;} else {a2 = 0;}
     Serial.print(a1);
     Serial.print("\t");
     Serial.print(a2);
     Serial.print("\t");
   }
 
+void compare()
+  {
+     
+    if (tms > tms2)
+  {
+    digitalWrite(2, LOW);
+    digitalWrite(4, HIGH);
+  }  
+    else if (tms2 > tms)
+  {
+    digitalWrite(5, LOW);
+    digitalWrite(7, HIGH);
+  }
+    readSensor();
+  }
 
 void setup() 
 {  
@@ -137,27 +153,23 @@ void loop()
   
   
   readSensor();
-
-  if (a1 = 1)
+  Serial.print("tms ");
+  Serial.print(tms);
+  Serial.print(" tms2 ");
+  Serial.println(tms2);
+  if (a1 == 1)
   {
     stopwatch();
   }
-
+  if (a2 == 1)
+  {
+    stopwatch2();
+  }
   
 
  
 
-  if (tms > 5000)
-  {
-    digitalWrite(2, LOW);
-    digitalWrite(4, HIGH);
-  }
-
-  if (tms2 > 5000)
-  {
-    digitalWrite(5, LOW);
-    digitalWrite(7, HIGH);
-  }
+    compare();
 
 
 }
